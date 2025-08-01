@@ -23,7 +23,6 @@ src="https://www.facebook.com/tr?id=944218417170643&ev=PageView&noscript=1"
 
     <link rel="stylesheet" href="index.css" />
     <style>
-      /* Inline styles for immediate loading screen visibility */
       #loadingScreen {
         position: fixed;
         top: 0;
@@ -52,12 +51,10 @@ src="https://www.facebook.com/tr?id=944218417170643&ev=PageView&noscript=1"
       window.onload = () => {
         const loadingScreen = document.getElementById("loadingScreen");
         loadingScreen.style.opacity = "0";
-        // Wait for the transition to finish before removing the loading screen
         setTimeout(() => {
           loadingScreen.parentNode.removeChild(loadingScreen);
         }, 200);
       };
-      
       
       document.addEventListener("DOMContentLoaded", function () {
         const sceneEl = document.querySelector("a-scene");
@@ -83,7 +80,6 @@ src="https://www.facebook.com/tr?id=944218417170643&ev=PageView&noscript=1"
             );
             if (refreshPageImage) {
               refreshPageImage.style.display = "grid";
-              // Set the src dynamically after loading
               const heyyouImage = document.querySelector("#heyyou");
               if (heyyouImage) {
                 heyyouImage.src =
@@ -100,7 +96,6 @@ src="https://www.facebook.com/tr?id=944218417170643&ev=PageView&noscript=1"
             const errorImage = document.querySelector("#errorimage");
             if (errorImage) {
               errorImage.style.display = "grid";
-              // Set the src dynamically after loading
               const errorImg = document.querySelector("#errorimg");
               if (errorImg) {
                 errorImg.src =
@@ -115,12 +110,12 @@ src="https://www.facebook.com/tr?id=944218417170643&ev=PageView&noscript=1"
           }
         });
       });
-      
+
       const pinchScaleComponent = {
         schema: {
           min: { default: 0.33 },
           max: { default: 3 },
-          scale: { default: 0 }, // If scale is set to zero here, the object's initial scale is used.
+          scale: { default: 0 },
         },
         init() {
           const s = this.data.scale;
@@ -129,7 +124,7 @@ src="https://www.facebook.com/tr?id=944218417170643&ev=PageView&noscript=1"
           this.scaleFactor = 1;
           this.handleEvent = this.handleEvent.bind(this);
           this.el.sceneEl.addEventListener("twofingermove", this.handleEvent);
-          this.el.classList.add("cantap"); // Needs "objects: .cantap" attribute on raycaster.
+          this.el.classList.add("cantap");
         },
         remove() {
           this.el.sceneEl.removeEventListener(
@@ -150,6 +145,7 @@ src="https://www.facebook.com/tr?id=944218417170643&ev=PageView&noscript=1"
           this.el.object3D.scale.z = this.scaleFactor * this.initialScale.z;
         },
       };
+
       const gestureDetectorComponent = {
         schema: {
           element: { default: "" },
@@ -237,10 +233,7 @@ src="https://www.facebook.com/tr?id=944218417170643&ev=PageView&noscript=1"
                 currentState.spread - previousState.spread;
             }
 
-            // Update state with new data
             Object.assign(previousState, currentState);
-
-            // Add state data to event detail
             Object.assign(eventDetail, previousState);
 
             const eventName = `${this.getEventPrefix(
@@ -253,7 +246,6 @@ src="https://www.facebook.com/tr?id=944218417170643&ev=PageView&noscript=1"
           if (event.touches.length == 0) {
             return null;
           }
-          // Convert event.touches to an array so we can use reduce
           const touchList = [];
           for (let i = 0; i < event.touches.length; i++) {
             touchList.push(event.touches[i]);
@@ -263,7 +255,6 @@ src="https://www.facebook.com/tr?id=944218417170643&ev=PageView&noscript=1"
             touchCount: touchList.length,
           };
 
-          // Calculate center of all current touches
           const centerPositionRawX =
             touchList.reduce((sum, touch) => sum + touch.clientX, 0) /
             touchList.length;
@@ -276,7 +267,6 @@ src="https://www.facebook.com/tr?id=944218417170643&ev=PageView&noscript=1"
             y: centerPositionRawY,
           };
 
-          // Scale touch position and spread by average of window dimensions
           const screenScale = 2 / (window.innerWidth + window.innerHeight);
 
           touchState.position = {
@@ -284,7 +274,6 @@ src="https://www.facebook.com/tr?id=944218417170643&ev=PageView&noscript=1"
             y: centerPositionRawY * screenScale,
           };
 
-          // Calculate average spread of touches from the center point
           if (touchList.length >= 2) {
             const spread =
               touchList.reduce(
@@ -307,15 +296,6 @@ src="https://www.facebook.com/tr?id=944218417170643&ev=PageView&noscript=1"
         },
       };
 
-      ////******SECTION FOR CHANGING THE URL*****////
-      const changeTheExternalUrl = () => {
-        ////You should copy and paste your desired URL into the section 'externalURL' (line 206) below that you see an URL.
-        const externalURL =
-          "https://form.jotform.com/250636684285163";
-        return externalURL;
-      };
-      ////******SECTION FOR CHANGING THE URL*****////
-
       const playVideoComponent = {
         schema: {
           video: { type: "string" },
@@ -325,18 +305,8 @@ src="https://www.facebook.com/tr?id=944218417170643&ev=PageView&noscript=1"
         init() {
           const v = document.querySelector(this.data.video);
           const p = this.data.thumb && document.querySelector(this.data.thumb);
-          const directButton = document.getElementById("start-button-id");
-
-          directButton.addEventListener("click", () => {
-            const URL = changeTheExternalUrl();
-            window.location.href = `${URL}`;
-          });
-
           const el = this.el;
-          setTimeout(() => {
-            directButton.style.display = "block";
-          }, 10000); // THIS IS HOW TO CHANGE TIME DEALAY FOR BUTTON IN MILISECONDS
-          // Set thumbnail with flat material
+
           if (p) {
             el.setAttribute("material", "src", p);
             el.setAttribute("shader", "flat");
@@ -382,29 +352,25 @@ window.addEventListener('DOMContentLoaded', () => {
     const statusDiv = document.getElementById('status-div');
     const dogTarget = document.querySelector('#dog-target');
 
-        // Wait for MindAR to be ready
-        sceneEl.addEventListener("arReady", () => {
-          console.log("AR Ready");
-          statusDiv.style.display = 'block';
-        });
+    sceneEl.addEventListener("arReady", () => {
+      console.log("AR Ready");
+      statusDiv.style.display = 'block';
+    });
 
-        // Hide when target is found
-        dogTarget.addEventListener("targetFound", () => {
-          console.log("Target Found");
-          statusDiv.style.display = 'none';
-        });
+    dogTarget.addEventListener("targetFound", () => {
+      console.log("Target Found");
+      statusDiv.style.display = 'none';
+    });
 
-       // Show again when target is lost
-        dogTarget.addEventListener("targetLost", () => {
-          console.log("Target Lost");
-          statusDiv.style.display = 'block';
-        });
-      });
+    dogTarget.addEventListener("targetLost", () => {
+      console.log("Target Lost");
+      statusDiv.style.display = 'block';
+    });
+  });
 
-
-      AFRAME.registerComponent("play-video-component", playVideoComponent);
-      AFRAME.registerComponent("gesture-detector", gestureDetectorComponent);
-      AFRAME.registerComponent("pinch-scale", pinchScaleComponent);
+  AFRAME.registerComponent("play-video-component", playVideoComponent);
+  AFRAME.registerComponent("gesture-detector", gestureDetectorComponent);
+  AFRAME.registerComponent("pinch-scale", pinchScaleComponent);
     </script>
   </head>
   <body>
@@ -443,14 +409,7 @@ window.addEventListener('DOMContentLoaded', () => {
       </div>
     </div>
 
-    <img
-      class="start-button"
-      id="start-button-id"
-      src="assets/freegiftbutton.png"
-    />
-
-<div id="status-div">Point Phone At Dog Logo On Jar Top</div>
-
+    <div id="status-div">Point Phone At Dog Logo On Jar Top</div>
 
     <a-scene
       mindar-image="imageTargetSrc: assets/plaque jar top lip sticker target scale5.mind;"
@@ -472,16 +431,13 @@ window.addEventListener('DOMContentLoaded', () => {
           src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/softmind/scene.gltf"
         ></a-asset-item>
 
-        <!--******SECTION FOR CHANGING THE VIDEO*****////-->
-        <!--////You should copy and paste your desired video URL that you uploaded in the 'Assets' folder into the section 'src' below that you see a video URL-->
         <video
-          src="assets/Plauque jar top video 720p with background.mp4"
+          src="assets/fvpt jar top compliant.mp4"
           id="dog-video"
           preload="auto"
           crossorigin="anonymous"
           loop="false"
         ></video>
-        <!--******SECTION FOR CHANGING THE VIDEO*****////-->
       </a-assets>
 
       <a-camera
@@ -492,13 +448,12 @@ window.addEventListener('DOMContentLoaded', () => {
       ></a-camera>
 
       <a-entity id="dog-target" mindar-image-target="targetIndex: 0">
- <a-entity
+        <a-entity
           pinch-scale
           play-video-component="video: #dog-video;  thumb: #dog-thumb; canstop: true"
           geometry="primitive: circle; radius: 0.52 segments: 128"
           material="side: double"
         ></a-entity>
-
       </a-entity>
     </a-scene>
     <script>
